@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - claude/blissful-wozniak-jty3sl
+      - main
   workflow_dispatch:
 
 permissions:
