@@ -1,37 +1,38 @@
 export default function HudCard({ children, style = {}, active = false, green = false, warn = false }) {
   const bracketColor = green
-    ? 'rgba(0,255,140,0.8)'
+    ? '#00ff88'
     : warn
-    ? 'rgba(255,140,0,0.8)'
+    ? '#ff9040'
     : active
-    ? 'rgba(0,210,255,0.95)'
-    : 'rgba(0,200,255,0.5)'
+    ? '#00d9ff'
+    : 'rgba(0,200,255,0.6)'
   const borderColor = green
-    ? 'rgba(0,255,140,0.38)'
+    ? 'rgba(0,255,136,0.5)'
     : warn
-    ? 'rgba(255,140,0,0.38)'
+    ? 'rgba(255,144,64,0.5)'
     : active
-    ? 'rgba(0,210,255,0.6)'
-    : 'rgba(0,200,255,0.22)'
-  const bgColor = green ? 'rgba(0,12,6,0.94)' : warn ? 'rgba(18,6,0,0.94)' : 'rgba(1,12,28,0.94)'
+    ? 'rgba(0,210,255,0.7)'
+    : 'rgba(0,200,255,0.35)'
+  const bgColor = green
+    ? 'rgba(0,18,10,0.97)'
+    : warn
+    ? 'rgba(22,8,0,0.97)'
+    : 'rgba(3,16,40,0.97)'
   const shadow = green
-    ? '0 0 32px rgba(0,255,140,0.18), 0 0 64px rgba(0,255,140,0.06), 0 4px 28px rgba(0,0,0,0.65)'
+    ? '0 0 36px rgba(0,255,136,0.2), 0 6px 28px rgba(0,0,0,0.7)'
     : warn
-    ? '0 0 32px rgba(255,140,0,0.14), 0 4px 28px rgba(0,0,0,0.65)'
+    ? '0 0 36px rgba(255,144,64,0.16), 0 6px 28px rgba(0,0,0,0.7)'
     : active
-    ? '0 0 44px rgba(0,200,255,0.24), 0 0 88px rgba(0,200,255,0.08), 0 4px 32px rgba(0,0,0,0.7)'
-    : '0 0 24px rgba(0,200,255,0.08), 0 4px 20px rgba(0,0,0,0.55)'
+    ? '0 0 48px rgba(0,200,255,0.28), 0 6px 32px rgba(0,0,0,0.75)'
+    : '0 0 28px rgba(0,200,255,0.1), 0 6px 22px rgba(0,0,0,0.6)'
   const bk = `2px solid ${bracketColor}`
-  const c = { position: 'absolute', width: 13, height: 13, pointerEvents: 'none', zIndex: 1 }
+  const c = { position: 'absolute', width: 14, height: 14, pointerEvents: 'none', zIndex: 1 }
   return (
     <div style={{
-      position: 'relative',
-      backgroundColor: bgColor,
+      position: 'relative', backgroundColor: bgColor,
       border: `1px solid ${borderColor}`,
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      boxShadow: shadow,
-      ...style
+      backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+      boxShadow: shadow, ...style
     }}>
       <span style={{ ...c, top: -1, left: -1,     borderTop: bk, borderLeft: bk     }} />
       <span style={{ ...c, top: -1, right: -1,    borderTop: bk, borderRight: bk    }} />
