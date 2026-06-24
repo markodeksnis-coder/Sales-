@@ -1,127 +1,49 @@
-// Shared design tokens used across all pages
 export const CARD = {
-  backgroundColor: 'rgba(10, 15, 30, 0.85)',
-  border: '1px solid rgba(255, 255, 255, 0.07)',
-  backdropFilter: 'blur(24px)',
-  WebkitBackdropFilter: 'blur(24px)',
-  padding: '20px',
+  backgroundColor: 'rgba(3, 10, 26, 0.9)',
+  border: '1px solid rgba(14,165,233,0.14)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  position: 'relative',
+  padding: '16px',
 }
-
-export const CARD_RED = {
-  ...CARD,
-  backgroundColor: 'rgba(239, 68, 68, 0.06)',
-  border: '1px solid rgba(239, 68, 68, 0.25)',
-  boxShadow: '0 0 30px rgba(239, 68, 68, 0.08), inset 0 1px 0 rgba(239, 68, 68, 0.1)',
-}
-
-export const CARD_ACTIVE = {
-  ...CARD,
-  border: '1px solid rgba(239, 68, 68, 0.45)',
-  boxShadow: '0 0 25px rgba(239, 68, 68, 0.15)',
-}
-
-export const CARD_GREEN = {
-  ...CARD,
-  border: '1px solid rgba(34, 197, 94, 0.3)',
-  boxShadow: '0 0 20px rgba(34, 197, 94, 0.08)',
-}
-
+export const CARD_RED = { ...CARD, border: '1px solid rgba(249,115,22,0.4)', boxShadow: '0 0 24px rgba(249,115,22,0.08)' }
+export const CARD_ACTIVE = { ...CARD, border: '1px solid rgba(14,165,233,0.5)', boxShadow: '0 0 28px rgba(14,165,233,0.12)' }
+export const CARD_GREEN = { ...CARD, border: '1px solid rgba(34,197,94,0.35)', boxShadow: '0 0 20px rgba(34,197,94,0.08)' }
 export const LABEL = {
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '10px',
-  fontWeight: 700,
-  letterSpacing: '0.22em',
-  color: 'rgba(255,255,255,0.28)',
-  textTransform: 'uppercase',
+  fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 700,
+  letterSpacing: '0.22em', color: 'rgba(14,165,233,0.38)', textTransform: 'uppercase', display: 'block',
 }
-
 export const H1 = {
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '24px',
-  fontWeight: 800,
-  letterSpacing: '-0.02em',
-  background: 'linear-gradient(135deg, #f1f5f9 30%, #94a3b8 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
+  fontFamily: 'Orbitron, sans-serif', fontSize: '20px', fontWeight: 900,
+  letterSpacing: '0.06em', color: '#38bdf8', margin: 0, textShadow: '0 0 24px rgba(14,165,233,0.4)',
 }
-
-export const H2 = {
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '15px',
-  fontWeight: 700,
-  color: '#f1f5f9',
-  letterSpacing: '-0.01em',
-}
-
-export const BODY = {
-  fontFamily: 'Inter, sans-serif',
-  fontSize: '13px',
-  color: '#64748b',
-  lineHeight: '1.5',
-}
-
+export const H2 = { fontFamily: 'Orbitron, sans-serif', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', color: '#bae6fd' }
+export const BODY = { fontFamily: 'Inter, sans-serif', fontSize: '12px', color: 'rgba(186,230,253,0.55)', lineHeight: '1.6' }
 export const BTN_PRIMARY = {
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '11px',
-  fontWeight: 700,
-  letterSpacing: '0.18em',
-  padding: '10px 22px',
-  border: 'none',
-  cursor: 'pointer',
-  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-  color: '#fff',
-  boxShadow: '0 0 24px rgba(239, 68, 68, 0.35)',
-  transition: 'all 0.2s',
+  fontFamily: 'Orbitron, sans-serif', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em',
+  padding: '10px 22px', border: '1px solid rgba(14,165,233,0.55)', cursor: 'pointer',
+  background: 'rgba(14,165,233,0.12)', color: '#38bdf8', boxShadow: '0 0 18px rgba(14,165,233,0.2)', transition: 'all 0.2s',
 }
-
 export const BTN_GHOST = {
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '11px',
-  fontWeight: 700,
-  letterSpacing: '0.15em',
-  padding: '8px 16px',
-  border: '1px solid rgba(255,255,255,0.1)',
-  cursor: 'pointer',
-  background: 'rgba(255,255,255,0.03)',
-  color: 'rgba(255,255,255,0.45)',
-  transition: 'all 0.2s',
+  fontFamily: 'Orbitron, sans-serif', fontSize: '9px', fontWeight: 700, letterSpacing: '0.14em',
+  padding: '8px 16px', border: '1px solid rgba(14,165,233,0.18)', cursor: 'pointer',
+  background: 'transparent', color: 'rgba(14,165,233,0.45)', transition: 'all 0.2s',
 }
-
 export const INPUT = {
-  width: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.35)',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  color: '#f1f5f9',
-  fontFamily: 'Inter, sans-serif',
-  fontSize: '13px',
-  padding: '10px 12px',
-  outline: 'none',
-  boxSizing: 'border-box',
-  transition: 'border-color 0.2s',
+  width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(14,165,233,0.18)',
+  color: '#bae6fd', fontFamily: 'JetBrains Mono, monospace', fontSize: '12px',
+  padding: '10px 14px', outline: 'none', boxSizing: 'border-box',
 }
-
-export const TEXTAREA = {
-  ...INPUT,
-  resize: 'vertical',
-  minHeight: '60px',
-}
-
-export const TAG = (color = '#ef4444', bg = 'rgba(239,68,68,0.08)') => ({
-  fontFamily: 'Space Grotesk, sans-serif',
-  fontSize: '10px',
-  fontWeight: 700,
-  letterSpacing: '0.14em',
-  padding: '3px 8px',
-  border: `1px solid ${color}55`,
-  color,
-  backgroundColor: bg,
+export const TEXTAREA = { ...INPUT, resize: 'vertical', fontFamily: 'Inter, sans-serif', minHeight: '64px' }
+export const TAG = (color = '#0ea5e9', bg = 'rgba(14,165,233,0.08)') => ({
+  fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 700, letterSpacing: '0.18em',
+  padding: '3px 8px', border: `1px solid ${color}55`, color, backgroundColor: bg,
 })
-
 export const SCORE_BAR = (pct, color) => ({
-  height: '5px',
-  width: `${pct}%`,
-  background: `linear-gradient(90deg, ${color}, ${color}88)`,
-  boxShadow: `0 0 8px ${color}66`,
-  transition: 'width 0.7s cubic-bezier(0.4,0,0.2,1)',
+  height: '4px', width: `${pct}%`, background: color, boxShadow: `0 0 8px ${color}66`,
+  transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)',
 })
+export const SKILL_COLORS = {
+  rapport: '#0ea5e9', discovery: '#22d3ee', tonality: '#a78bfa',
+  objection_handling: '#f97316', frame_control: '#22c55e',
+}

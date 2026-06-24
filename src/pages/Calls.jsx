@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getSettings, getAnalysis, saveAnalysis } from '../utils/storage'
-import { CARD, LABEL, H1, BODY, BTN_PRIMARY, BTN_GHOST, TAG, SCORE_BAR } from '../utils/theme'
+import { LABEL, H1, BODY, BTN_PRIMARY, BTN_GHOST, SCORE_BAR } from '../utils/theme'
+import HudCard from '../components/HudCard'
+
+const SKILL_COLORS = {
+  rapport:            '#0ea5e9',
+  discovery:          '#22d3ee',
+  tonality:           '#a78bfa',
+  objection_handling: '#f97316',
+  frame_control:      '#22c55e',
+}
 
 function detectType(title = '') {
   const t = title.toLowerCase()
@@ -9,43 +18,46 @@ function detectType(title = '') {
 
 function AnalysisPanel({ analysis }) {
   return (
-    <div className="fade-in" style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="fade-in" style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(14,165,233,0.1)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
         <div style={{ ...LABEL, marginBottom: '10px' }}>NEEDS WORK</div>
         {(analysis.wrong||[]).map((item,i) => (
-          <div key={i} style={{ borderLeft: '2px solid rgba(239,68,68,0.6)', paddingLeft: '12px', marginBottom: '12px', background: 'rgba(239,68,68,0.03)', padding: '8px 12px' }}>
-            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#f1f5f9', marginBottom: '4px' }}>{item.issue}</div>
-            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: '#64748b' }}>FIX → {item.fix}</div>
+          <div key={i} style={{ borderLeft: '2px solid rgba(249,115,22,0.6)', marginBottom: '12px', background: 'rgba(249,115,22,0.03)', padding: '8px 12px' }}>
+            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#bae6fd', marginBottom: '4px' }}>{item.issue}</div>
+            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: 'rgba(14,165,233,0.4)' }}>FIX → {item.fix}</div>
           </div>
         ))}
       </div>
       {analysis.right && (
-        <div style={{ borderLeft: '2px solid rgba(34,197,94,0.6)', paddingLeft: '12px', background: 'rgba(34,197,94,0.03)', padding: '8px 12px' }}>
+        <div style={{ borderLeft: '2px solid rgba(34,197,94,0.6)', background: 'rgba(34,197,94,0.03)', padding: '8px 12px' }}>
           <div style={{ ...LABEL, color: 'rgba(34,197,94,0.6)', marginBottom: '6px' }}>DONE RIGHT</div>
-          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#f1f5f9', marginBottom: '4px' }}>{analysis.right.what}</div>
-          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: '#64748b' }}>{analysis.right.why}</div>
+          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#bae6fd', marginBottom: '4px' }}>{analysis.right.what}</div>
+          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: 'rgba(14,165,233,0.4)' }}>{analysis.right.why}</div>
         </div>
       )}
       {analysis.scores && (
         <div>
-          <div style={{ ...LABEL, marginBottom: '12px' }}>SKILL SCORES</div>
-          {[['RAPPORT','rapport','#ef4444'],['DISCOVERY','discovery','#f97316'],['TONALITY','tonality','#22d3ee'],['OBJECTION HANDLING','objection_handling','#a78bfa'],['FRAME CONTROL','frame_control','#ef4444']].map(([lbl,key,col]) => (
-            <div key={key} style={{ marginBottom: '10px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.4)' }}>{lbl}</span>
-                <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '11px', fontWeight: 700, color: col }}>{analysis.scores[key]}/10</span>
+          <div style={{ ...LABEL, marginBottom: '12px' }}>SKILL MATRIX</div>
+          {[['RAPPORT','rapport'],['DISCOVERY','discovery'],['TONALITY','tonality'],['OBJECTION HANDLING','objection_handling'],['FRAME CONTROL','frame_control']].map(([lbl,key]) => {
+            const col = SKILL_COLORS[key]
+            return (
+              <div key={key} style={{ marginBottom: '10px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span style={LABEL}>{lbl}</span>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', fontWeight: 700, color: col }}>{analysis.scores[key]}/10</span>
+                </div>
+                <div style={{ height: '4px', backgroundColor: 'rgba(14,165,233,0.06)', width: '100%' }}>
+                  <div style={{ ...SCORE_BAR((analysis.scores[key]/10)*100, col) }} />
+                </div>
               </div>
-              <div style={{ height: '4px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '2px' }}>
-                <div style={{ ...SCORE_BAR((analysis.scores[key]/10)*100, col), borderRadius: '2px' }} />
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
       {analysis.drill_this_week && (
-        <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', padding: '12px' }}>
-          <div style={{ ...LABEL, color: 'rgba(239,68,68,0.8)', marginBottom: '6px' }}>DRILL THIS WEEK</div>
-          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#f1f5f9' }}>{analysis.drill_this_week}</div>
+        <div style={{ background: 'rgba(14,165,233,0.05)', border: '1px solid rgba(14,165,233,0.2)', padding: '12px' }}>
+          <div style={{ ...LABEL, color: 'rgba(14,165,233,0.7)', marginBottom: '6px' }}>DRILL THIS WEEK</div>
+          <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', color: '#bae6fd' }}>{analysis.drill_this_week}</div>
         </div>
       )}
     </div>
@@ -72,34 +84,38 @@ function CallCard({ call, onAnalyze }) {
     finally { setAnalyzing(false) }
   }
 
+  const typeColor = type === 'COACHING' ? '#22c55e' : '#0ea5e9'
+  const typeBg    = type === 'COACHING' ? 'rgba(34,197,94,0.08)' : 'rgba(14,165,233,0.08)'
+
   return (
-    <div style={{ ...CARD, transition: 'border-color 0.2s', borderColor: analysis ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.07)' }}>
+    <HudCard active={analysis && expanded} green={!!analysis && !expanded} style={{ padding: '14px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
-            <span style={TAG(type==='COACHING'?'#22c55e':'#ef4444', type==='COACHING'?'rgba(34,197,94,0.08)':'rgba(239,68,68,0.08)')}>{type}</span>
-            {dateStr  && <span style={{ fontFamily:'Inter,sans-serif', fontSize:'11px', color:'rgba(255,255,255,0.25)' }}>{dateStr}</span>}
-            {duration && <span style={{ fontFamily:'Inter,sans-serif', fontSize:'11px', color:'rgba(255,255,255,0.25)' }}>{duration}</span>}
-            {analysis && <span style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'10px', fontWeight:700, letterSpacing:'0.12em', color:'#22c55e' }}>✓ ANALYZED</span>}
+            <span style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 700, letterSpacing: '0.18em', padding: '3px 8px', border: `1px solid ${typeColor}55`, color: typeColor, backgroundColor: typeBg }}>{type}</span>
+            {dateStr  && <span style={{ fontFamily:'JetBrains Mono, monospace', fontSize:'11px', color:'rgba(14,165,233,0.3)' }}>{dateStr}</span>}
+            {duration && <span style={{ fontFamily:'JetBrains Mono, monospace', fontSize:'11px', color:'rgba(14,165,233,0.3)' }}>{duration}</span>}
+            {analysis && <span style={{ fontFamily:'Orbitron, sans-serif', fontSize:'8px', fontWeight:700, letterSpacing:'0.12em', color:'#22c55e' }}>✓ ANALYZED</span>}
           </div>
-          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'14px', fontWeight:700, color:'#f1f5f9', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{title}</div>
+          <div style={{ fontFamily:'Orbitron, sans-serif', fontSize:'13px', fontWeight:700, color:'#bae6fd', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', letterSpacing:'0.04em' }}>{title}</div>
         </div>
         <div style={{ display:'flex', gap:'6px', flexShrink:0 }}>
           <a href={`https://fathom.video/calls/${call.id}`} target="_blank" rel="noopener noreferrer"
-            style={{ ...BTN_GHOST, textDecoration:'none', fontSize:'10px', padding:'7px 12px', whiteSpace:'nowrap' }}>OPEN</a>
+            style={{ ...BTN_GHOST, textDecoration:'none', fontSize:'9px', padding:'7px 12px', whiteSpace:'nowrap' }}>OPEN</a>
           <button onClick={handleAnalyze} disabled={analyzing} style={{
-            ...BTN_PRIMARY, fontSize:'10px', letterSpacing:'0.14em', padding:'7px 14px', whiteSpace:'nowrap',
-            background: analysis ? (expanded?'rgba(34,197,94,0.12)':'rgba(34,197,94,0.08)') : 'linear-gradient(135deg,#ef4444,#dc2626)',
-            border: analysis ? '1px solid rgba(34,197,94,0.3)' : 'none',
-            color: analysis ? '#22c55e' : '#fff',
-            boxShadow: analysis ? 'none' : '0 0 16px rgba(239,68,68,0.3)',
-            opacity: analyzing ? 0.6 : 1, cursor: analyzing ? 'wait' : 'pointer',
-          }}>{analyzing?'ANALYZING...':analysis?(expanded?'HIDE':'VIEW'):'ANALYZE'}</button>
+            fontFamily: 'Orbitron, sans-serif', fontSize: '9px', fontWeight: 700, letterSpacing: '0.14em',
+            padding: '7px 14px', cursor: analyzing ? 'wait' : 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s',
+            opacity: analyzing ? 0.6 : 1, border: '1px solid',
+            background: analysis ? (expanded ? 'rgba(14,165,233,0.15)' : 'rgba(14,165,233,0.08)') : 'rgba(14,165,233,0.12)',
+            borderColor: 'rgba(14,165,233,0.4)',
+            color: '#38bdf8',
+            boxShadow: '0 0 16px rgba(14,165,233,0.15)',
+          }}>{analyzing ? 'SCANNING...' : analysis ? (expanded ? 'COLLAPSE' : 'VIEW INTEL') : 'ANALYZE'}</button>
         </div>
       </div>
-      {error && <div style={{ marginTop:'10px', padding:'8px 12px', background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.25)', fontFamily:'Inter,sans-serif', fontSize:'12px', color:'#ef4444' }}>ERROR: {error}</div>}
+      {error && <div style={{ marginTop:'10px', padding:'8px 12px', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.25)', fontFamily:'Inter,sans-serif', fontSize:'12px', color:'#f97316' }}>ERROR: {error}</div>}
       {expanded && analysis && <AnalysisPanel analysis={analysis} />}
-    </div>
+    </HudCard>
   )
 }
 
@@ -156,30 +172,32 @@ export default function Calls() {
     <div className="fade-in" style={{ display:'flex', flexDirection:'column', gap:'16px' }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
         <div>
-          <h1 style={H1}>CALL LIBRARY</h1>
-          <p style={{ ...BODY, marginTop:'5px' }}>{calls.length} calls loaded</p>
+          <h1 style={H1}>INTEL FEED</h1>
+          <p style={{ ...BODY, marginTop:'5px' }}>{calls.length} transmissions indexed</p>
         </div>
-        <button onClick={fetchCalls} disabled={loading} style={{ ...BTN_GHOST, opacity: loading?0.5:1 }}>{loading?'LOADING...':'REFRESH'}</button>
+        <button onClick={fetchCalls} disabled={loading} style={{ ...BTN_GHOST, opacity: loading?0.5:1 }}>{loading?'SYNCING...':'REFRESH'}</button>
       </div>
 
       <div style={{ display:'flex', gap:'6px' }}>
         {['ALL','PROSPECT','COACHING'].map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{
-            fontFamily:'Space Grotesk,sans-serif', fontSize:'10px', fontWeight:700, letterSpacing:'0.15em',
-            padding:'7px 16px', cursor:'pointer', border:'none', transition:'all 0.15s',
-            background: filter===f ? 'linear-gradient(135deg,#ef4444,#dc2626)' : 'rgba(255,255,255,0.04)',
-            color: filter===f ? '#fff' : 'rgba(255,255,255,0.3)',
-            boxShadow: filter===f ? '0 0 16px rgba(239,68,68,0.3)' : 'none',
+            fontFamily:'Orbitron, sans-serif', fontSize:'9px', fontWeight:700, letterSpacing:'0.15em',
+            padding:'7px 16px', cursor:'pointer', transition:'all 0.15s',
+            background: filter===f ? 'rgba(14,165,233,0.15)' : 'rgba(14,165,233,0.03)',
+            border: `1px solid ${filter===f ? 'rgba(14,165,233,0.55)' : 'rgba(14,165,233,0.12)'}`,
+            color: filter===f ? '#38bdf8' : 'rgba(14,165,233,0.3)',
+            boxShadow: filter===f ? '0 0 14px rgba(14,165,233,0.2)' : 'none',
+            textShadow: filter===f ? '0 0 10px rgba(14,165,233,0.5)' : 'none',
           }}>{f}</button>
         ))}
       </div>
 
-      {error && <div style={{ padding:'14px', background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.25)', fontFamily:'Inter,sans-serif', fontSize:'13px', color:'#ef4444' }}>{error}</div>}
-      {loading && <div style={{ textAlign:'center', padding:'48px', fontFamily:'Space Grotesk,sans-serif', fontSize:'11px', letterSpacing:'0.2em', color:'rgba(255,255,255,0.2)' }} className="animate-pulse">LOADING CALLS...</div>}
+      {error && <div style={{ padding:'14px', background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.25)', fontFamily:'Inter,sans-serif', fontSize:'13px', color:'#f97316' }}>{error}</div>}
+      {loading && <div style={{ textAlign:'center', padding:'48px', fontFamily:'Orbitron, sans-serif', fontSize:'10px', letterSpacing:'0.2em', color:'rgba(14,165,233,0.3)' }}>RETRIEVING TRANSMISSIONS...</div>}
       {!loading && !error && filtered.length===0 && (
-        <div style={{ ...CARD, textAlign:'center', padding:'48px' }}>
-          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:'11px', letterSpacing:'0.2em', color:'rgba(255,255,255,0.2)' }}>NO CALLS FOUND</div>
-        </div>
+        <HudCard style={{ textAlign:'center', padding:'48px' }}>
+          <div style={{ fontFamily:'Orbitron, sans-serif', fontSize:'10px', letterSpacing:'0.2em', color:'rgba(14,165,233,0.2)' }}>NO TRANSMISSIONS FOUND</div>
+        </HudCard>
       )}
       <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
         {filtered.map(call => <CallCard key={call.id} call={call} onAnalyze={handleAnalyze} />)}

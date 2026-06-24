@@ -19,7 +19,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0a0a0a' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#020c1a' }}>
       <StreakBar />
       <Layout page={page} setPage={setPage}>
         {pages[page]}
