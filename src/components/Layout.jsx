@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { getStreak } from '../utils/storage'
 
 const NAV = [
-  { id: 'today',     label: 'DASHBOARD',  icon: '⬡' },
-  { id: 'calls',     label: 'INTEL FEED', icon: '◎' },
-  { id: 'insights',  label: 'TRAINING',   icon: '◈' },
-  { id: 'drills',    label: 'REPS',       icon: '▶' },
-  { id: 'calllog',   label: 'CALL LOG',   icon: '◉' },
-  { id: 'genesis',   label: 'GENESIS',    icon: '◇' },
-  { id: 'knowledge', label: 'KNOWLEDGE',  icon: '✦' },
+  { id: 'today',     label: 'Dashboard',   icon: '⬡' },
+  { id: 'calls',     label: 'Intel Feed',  icon: '◎' },
+  { id: 'insights',  label: 'Training',    icon: '◈' },
+  { id: 'drills',    label: 'Reps',        icon: '▶' },
+  { id: 'calllog',   label: 'Call Log',    icon: '◉' },
+  { id: 'genesis',   label: 'Genesis',     icon: '◇' },
+  { id: 'knowledge', label: 'Knowledge',   icon: '✦' },
 ]
 
 function Clock() {
@@ -21,7 +21,7 @@ function Clock() {
   const mm = String(time.getMinutes()).padStart(2,'0')
   const ss = String(time.getSeconds()).padStart(2,'0')
   return (
-    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '16px', fontWeight: 700, color: '#00ccff', letterSpacing: '0.04em', textShadow: '0 0 20px #00ccff, 0 0 40px rgba(0,200,255,0.4)' }}>
+    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '15px', fontWeight: 600, color: '#00aaff', letterSpacing: '0.02em' }}>
       {hh}:{mm}:{ss}
     </span>
   )
@@ -39,87 +39,77 @@ export default function Layout({ page, setPage, children }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
 
-      {/* SIDEBAR */}
       <aside style={{
-        position: 'fixed', top: 0, left: 0, bottom: 0, width: '224px',
-        backgroundColor: '#030c1a',
-        borderRight: '1px solid rgba(0,150,220,0.3)',
+        position: 'fixed', top: 0, left: 0, bottom: 0, width: '220px',
+        backgroundColor: '#060e1a',
+        borderRight: '1px solid rgba(255,255,255,0.07)',
         display: 'flex', flexDirection: 'column', zIndex: 100,
       }}>
-        {/* subtle grid overlay */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-          backgroundImage: 'radial-gradient(rgba(0,180,255,0.08) 1px, transparent 1px)',
-          backgroundSize: '22px 22px' }} />
 
         {/* BRAND */}
-        <div style={{ padding: '28px 22px 22px', borderBottom: '1px solid rgba(0,150,220,0.2)', position: 'relative', zIndex: 1 }}>
-          <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '20px', fontWeight: 900, letterSpacing: '0.25em', color: '#00ccff', textShadow: '0 0 24px #00ccff, 0 0 50px rgba(0,200,255,0.5), 0 0 80px rgba(0,200,255,0.2)' }}>APEX</div>
-          <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '10px', fontWeight: 600, letterSpacing: '0.25em', color: 'rgba(0,190,255,0.6)', marginTop: '3px' }}>PROTOCOL</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#00e87a', boxShadow: '0 0 10px #00e87a, 0 0 22px rgba(0,232,122,0.6)', animation: 'apexPulse 2s ease-in-out infinite', flexShrink: 0 }} />
-            <span style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 700, letterSpacing: '0.2em', color: '#00e87a', textShadow: '0 0 10px rgba(0,232,122,0.7)' }}>SYSTEM ONLINE</span>
+        <div style={{ padding: '28px 20px 24px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div style={{ width: '28px', height: '28px', border: '2px solid #0af', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 0 16px rgba(0,170,255,0.4)' }}>
+              <span style={{ color: '#0af', fontSize: '12px', fontWeight: 900, fontFamily: 'Orbitron, sans-serif' }}>A</span>
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '13px', fontWeight: 900, letterSpacing: '0.2em', color: '#ffffff' }}>APEX</div>
+              <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 600, letterSpacing: '0.2em', color: 'rgba(0,170,255,0.6)', marginTop: '1px' }}>PROTOCOL</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+            <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#00e87a', flexShrink: 0, animation: 'apexPulse 2.5s ease-in-out infinite' }} />
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', fontWeight: 500, color: 'rgba(0,220,110,0.85)' }}>System Online</span>
           </div>
         </div>
 
         {/* NAV */}
-        <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
+        <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
           {NAV.map(item => {
             const active = page === item.id
             return (
               <button key={item.id} onClick={() => setPage(item.id)} style={{
-                display: 'flex', alignItems: 'center', gap: '14px',
-                width: '100%', padding: '13px 22px',
-                background: active ? 'rgba(0,170,255,0.15)' : 'transparent',
-                border: 'none',
-                borderLeft: active ? '4px solid #00ccff' : '4px solid transparent',
-                cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left',
+                display: 'flex', alignItems: 'center', gap: '12px',
+                width: '100%', padding: '10px 12px', marginBottom: '2px',
+                background: active ? 'rgba(255,255,255,0.07)' : 'transparent',
+                border: 'none', borderRadius: '6px',
+                cursor: 'pointer', transition: 'all 0.12s', textAlign: 'left',
               }}>
-                <span style={{
-                  fontSize: '16px', flexShrink: 0,
-                  color: active ? '#00ccff' : 'rgba(100,170,220,0.7)',
-                  textShadow: active ? '0 0 12px #00ccff, 0 0 24px rgba(0,200,255,0.5)' : 'none',
-                  transition: 'all 0.15s',
-                }}>{item.icon}</span>
-                <span style={{
-                  fontFamily: 'Orbitron, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em',
-                  color: active ? '#ffffff' : '#6aabcc',
-                  textShadow: active ? '0 0 12px rgba(0,200,255,0.7)' : 'none',
-                  transition: 'all 0.15s',
-                }}>{item.label}</span>
+                <span style={{ fontSize: '14px', flexShrink: 0, color: active ? '#0af' : 'rgba(255,255,255,0.35)', transition: 'color 0.12s' }}>{item.icon}</span>
+                <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', fontWeight: active ? 600 : 400, color: active ? '#ffffff' : 'rgba(255,255,255,0.55)', transition: 'all 0.12s', letterSpacing: '0.01em' }}>{item.label}</span>
               </button>
             )
           })}
         </nav>
 
         {/* BOTTOM */}
-        <div style={{ padding: '16px 22px 20px', borderTop: '1px solid rgba(0,150,220,0.2)', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '14px' }}>
+        <div style={{ padding: '16px 20px 20px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
             <div>
-              <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 600, letterSpacing: '0.18em', color: '#3a7899', marginBottom: '6px' }}>STREAK</div>
-              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '26px', fontWeight: 700, lineHeight: 1, color: '#00ccff', textShadow: '0 0 20px #00ccff, 0 0 40px rgba(0,200,255,0.4)' }}>
-                {streak}<span style={{ fontSize: '13px', opacity: 0.55, marginLeft: '3px' }}>d</span>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.3)', marginBottom: '4px', letterSpacing: '0.05em' }}>STREAK</div>
+              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '26px', fontWeight: 700, lineHeight: 1, color: '#0af' }}>
+                {streak}<span style={{ fontSize: '13px', opacity: 0.5, marginLeft: '2px' }}>d</span>
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '8px', fontWeight: 600, letterSpacing: '0.18em', color: '#3a7899', marginBottom: '6px' }}>TIME</div>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.3)', marginBottom: '4px', letterSpacing: '0.05em' }}>TIME</div>
               <Clock />
             </div>
           </div>
           <button onClick={() => setPage('settings')} style={{
             display: 'flex', alignItems: 'center', gap: '10px', width: '100%',
-            padding: '10px 14px',
-            background: page === 'settings' ? 'rgba(0,180,255,0.18)' : 'rgba(0,130,200,0.08)',
-            border: page === 'settings' ? '1px solid rgba(0,200,255,0.6)' : '1px solid rgba(0,130,200,0.25)',
-            cursor: 'pointer', transition: 'all 0.15s',
+            padding: '9px 12px', borderRadius: '6px',
+            background: page === 'settings' ? 'rgba(255,255,255,0.07)' : 'transparent',
+            border: '1px solid rgba(255,255,255,0.07)',
+            cursor: 'pointer', transition: 'all 0.12s',
           }}>
-            <span style={{ fontSize: '14px', color: page === 'settings' ? '#00ccff' : '#4a88aa' }}>⚙</span>
-            <span style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.14em', color: page === 'settings' ? '#ffffff' : '#5a98ba' }}>CONFIG</span>
+            <span style={{ fontSize: '14px', color: page === 'settings' ? '#0af' : 'rgba(255,255,255,0.35)' }}>⚙</span>
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '13px', fontWeight: page === 'settings' ? 600 : 400, color: page === 'settings' ? '#ffffff' : 'rgba(255,255,255,0.55)' }}>Settings</span>
           </button>
         </div>
       </aside>
 
-      {/* MAIN */}
-      <main style={{ marginLeft: '224px', flex: 1, padding: '32px 30px', boxSizing: 'border-box', minHeight: '100vh' }}>
+      <main style={{ marginLeft: '220px', flex: 1, padding: '36px 32px', boxSizing: 'border-box', minHeight: '100vh' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
           {children}
         </div>
