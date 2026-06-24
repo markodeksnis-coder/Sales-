@@ -10,6 +10,8 @@ export default function Settings() {
   const [ok, setOk] = useState({})
   const [book, setBook]     = useState('')
   const [closer, setCloser] = useState('')
+  const [fathomTest, setFathomTest] = useState({ ok: null, msg: '' })
+  const [testing, setTesting] = useState(false)
 
   const persist = (section) => {
     saveSettings(s)
@@ -23,6 +25,26 @@ export default function Settings() {
   const rmBook    = (i) => upd({ readingStack: s.readingStack.filter((_,idx) => idx !== i) })
   const addCloser = () => { if (!closer.trim()) return; upd({ closers: [...(s.closers||[]), closer.trim()] }); setCloser('') }
   const rmCloser  = (i) => upd({ closers: s.closers.filter((_,idx) => idx !== i) })
+
+  const testFathom = async () => {
+    if (!s.fathomKey?.trim()) { setFathomTest({ ok: false, msg: 'No API key entered.' }); return }
+    setTesting(true); setFathomTest({ ok: null, msg: 'Testing connection...' })
+    try {
+      const res = await fetch('https://api.fathom.video/v1/calls?limit=5', {
+        headers: { Authorization: `Bearer ${s.fathomKey.trim()}` }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        const count = data?.data?.length ?? 0
+        setFathomTest({ ok: true, msg: `Connected — ${count} recent call${count !== 1 ? 's' : ''} found.` })
+      } else {
+        setFathomTest({ ok: false, msg: `Auth failed (${res.status}). Check your API key.` })
+      }
+    } catch {
+      setFathomTest({ ok: false, msg: 'Network error. Check your connection.' })
+    }
+    setTesting(false)
+  }
 
   const saveBtn = (section) => (
     <button onClick={() => persist(section)} style={ok[section]
@@ -39,10 +61,26 @@ export default function Settings() {
       </div>
 
       <HudCard style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        <div style={LABEL}>FATHOM API KEY</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <div style={LABEL}>FATHOM API KEY</div>
+          {fathomTest.msg && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: fathomTest.ok === true ? '#22c55e' : fathomTest.ok === false ? '#f97316' : '#0ea5e9', boxShadow: `0 0 6px ${fathomTest.ok === true ? '#22c55e' : fathomTest.ok === false ? '#f97316' : '#0ea5e9'}` }} />
+              <span style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: fathomTest.ok === true ? '#22c55e' : fathomTest.ok === false ? '#f97316' : '#38bdf8' }}>{fathomTest.msg}</span>
+            </div>
+          )}
+        </div>
         <input type="password" value={s.fathomKey || ''} onChange={e => upd({ fathomKey: e.target.value })} placeholder="Enter your Fathom API key..." style={{ ...INPUT }} />
         <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: 'rgba(14,165,233,0.3)', lineHeight: '1.5' }}>Used to pull your call recordings. Find it at fathom.video → Settings → API.</div>
-        {saveBtn('fathom')}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {saveBtn('fathom')}
+          <button onClick={testFathom} disabled={testing} style={{
+            fontFamily: 'Orbitron, sans-serif', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em',
+            padding: '9px 20px', background: 'rgba(14,165,233,0.06)', border: '1px solid rgba(14,165,233,0.25)',
+            color: testing ? 'rgba(14,165,233,0.4)' : '#38bdf8', cursor: testing ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s', alignSelf: 'flex-start',
+          }}>{testing ? 'TESTING...' : 'TEST CONNECTION'}</button>
+        </div>
       </HudCard>
 
       <HudCard style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>

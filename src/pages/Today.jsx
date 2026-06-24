@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getSettings, getStreak, saveStreak, getWeek, saveWeek, getDaily, saveDaily, getWeekKey, getTodayKey, storage } from '../utils/storage'
+import { getSettings, getStreak, saveStreak, getWeek, saveWeek, getDaily, saveDaily, getWeekKey, getTodayKey, storage, getAllAnalyses, getCallLog, getGenesisModules, getKnowledge } from '../utils/storage'
 import { LABEL, H1, BODY, BTN_PRIMARY, BTN_GHOST } from '../utils/theme'
 import HudCard from '../components/HudCard'
 
@@ -10,7 +10,7 @@ const DRILL_BY_DAY = {
   2: { name: 'PSYCHOLOGY',       desc: 'Read one chapter from your reading stack. Take notes on one technique to steal.' },
   3: { name: 'LIVE REPS',        desc: 'Real cold calls only. No fake practice. Log how many you made.' },
   4: { name: 'BREAKDOWN',        desc: 'Pick one elite closer on YouTube. Dissect their structure sentence by sentence.' },
-  5: { name: 'WEAK LINK ATTACK', desc: "Find your worst conversion point from this week. Drill it for the full hour." },
+  5: { name: 'WEAK LINK ATTACK', desc: 'Find your worst conversion point from this week. Drill it for the full hour.' },
 }
 
 function RadialGauge({ value = 0, max = 10, label = '', color = '#0ea5e9', size = 100 }) {
@@ -35,11 +35,22 @@ function RadialGauge({ value = 0, max = 10, label = '', color = '#0ea5e9', size 
 }
 
 export default function Today({ setPage }) {
-  const today     = new Date()
-  const dow       = today.getDay()
-  const weekKey   = getWeekKey()
-  const dateKey   = getTodayKey()
-  const settings  = getSettings()
+  const today    = new Date()
+  const dow      = today.getDay()
+  const weekKey  = getWeekKey()
+  const dateKey  = getTodayKey()
+  const settings = getSettings()
+
+  const analyses       = getAllAnalyses()
+  const callLog        = getCallLog()
+  const genesisModules = getGenesisModules()
+  const knowledge      = getKnowledge()
+  const analysesCount  = analyses.length
+  const callLogCount   = callLog.length
+  const closedCount    = callLog.filter(c => c.conclusion === 'CLOSED').length
+  const genesisDone    = genesisModules.filter(m => m.completed).length
+  const genesisTotal   = genesisModules.length
+  const knowledgeCount = knowledge.length
 
   const [streak,   setStreak]   = useState(getStreak)
   const [week,     setWeek]     = useState(() => getWeek(weekKey))
@@ -71,11 +82,18 @@ export default function Today({ setPage }) {
   const hourConfigs = [
     { label: 'HOUR 01', title: 'COACHING CALL',        desc: 'Live coaching or roleplay session', action: null },
     { label: 'HOUR 02', title: 'CALL REVIEW',          desc: 'Pull a call from your library and break it down', action: { label: 'OPEN LIBRARY', page: 'calls' } },
-    { label: 'HOUR 03', title: 'SALES GENESIS MODULE', desc: `SKILL OF THE WEEK: ${(settings.skillOfWeek||'Tonality').toUpperCase()}`, action: null },
+    { label: 'HOUR 03', title: 'SALES GENESIS MODULE', desc: `SKILL OF THE WEEK: ${(settings.skillOfWeek||'Tonality').toUpperCase()}`, action: { label: 'OPEN GENESIS', page: 'genesis' } },
     { label: 'HOUR 04', title: drill?.name || 'REST DAY', desc: drill?.desc || 'No drill today. Rest and recover.', action: null },
   ]
 
   const doneCount = hours.filter(h => h.done).length
+
+  const systemStats = [
+    { label: 'CALLS ANALYZED', value: analysesCount,              color: '#0ea5e9', page: 'calls' },
+    { label: 'CLOSED / LOGGED', value: `${closedCount}/${callLogCount}`, color: '#22c55e', page: 'calllog' },
+    { label: 'GENESIS DONE',   value: `${genesisDone}/${genesisTotal}`, color: '#a78bfa', page: 'genesis' },
+    { label: 'KNOWLEDGE OPS',  value: knowledgeCount,             color: '#22d3ee', page: 'knowledge' },
+  ]
 
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -86,6 +104,17 @@ export default function Today({ setPage }) {
           <p style={{ ...BODY, marginTop: '5px' }}>{today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
         </div>
         <RadialGauge value={streak} max={30} label="STREAK" color="#22d3ee" size={90} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+        {systemStats.map(stat => (
+          <div key={stat.label} onClick={() => setPage?.(stat.page)} style={{ cursor: 'pointer' }}>
+            <HudCard style={{ padding: '14px', textAlign: 'center' }}>
+              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '22px', fontWeight: 700, color: stat.color, textShadow: `0 0 16px ${stat.color}80` }}>{stat.value}</div>
+              <div style={{ ...LABEL, marginTop: '4px', fontSize: '7px' }}>{stat.label}</div>
+            </HudCard>
+          </div>
+        ))}
       </div>
 
       <div style={{ display: 'flex', gap: '10px' }}>
